@@ -1,0 +1,43 @@
+version: "3.7"
+services:
+  db:
+    image: "mysql:5.7"
+    container_name: backend_challenge_db
+    environment:
+     MYSQL_ROOT_PASSWORD: root
+     MYSQL_USERNAME: root
+     MYSQL_PASSWORD: root
+        - '3306:3306'
+    expose:
+      - '3306'
+    volumes:
+      - mysql_data:/var/lib/mysql
+    logging:
+            driver: none
+    ports:
+      - "33061:3306"
+  redis:
+    image: redis:4.0-alpine
+    container_name: backend_challenge_redis
+    command: redis-server
+    volumes:
+      - redis:/data
+    ports:
+      - 6379
+  web:
+    build: ../
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails db:migrate && bundle exec rails s -p 3000 -e development -b '0.0.0.0'"
+    env_file: app.env
+    container_name: backend_challenge_app
+    volumes:
+      - ../:/rails-app
+      - bundle:/bundle
+    ports:
+      - "3000:3000"
+    depends_on:
+      - "db"
+      - "redis"
+volumes:
+  mysql_data:
+  bundle:
+  redis:
