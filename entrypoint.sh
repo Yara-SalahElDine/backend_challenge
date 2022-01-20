@@ -7,6 +7,8 @@ if [ -f /rails-app/tmp/pids/server.pid ]; then
   rm /rails-app/tmp/pids/server.pid
 fi
 
+bundle install
+
 until nc -vz db 3306 > /dev/null; do
     >&2 echo "db:3306 is unavailable - sleeping"
     sleep 1

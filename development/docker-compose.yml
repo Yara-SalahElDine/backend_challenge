@@ -37,6 +37,16 @@ services:
     depends_on:
       - "db"
       - "redis"
+  sidekiq:
+    build: ../
+    command: bundle exec sidekiq
+    container_name: backend_challenge_sidekiq
+    volumes:
+      - ../:/rails-app
+    env_file: app.env
+    depends_on:
+      - "web"
+      - "redis"
 volumes:
   mysql_data:
   bundle:
