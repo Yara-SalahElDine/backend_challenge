@@ -29,6 +29,8 @@ services:
     command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails db:migrate && bundle exec rails s -p 3000 -e development -b '0.0.0.0'"
     env_file: app.env
     container_name: backend_challenge_app
+    stdin_open: true
+    tty: true
     volumes:
       - ../:/rails-app
       - bundle:/bundle
@@ -37,6 +39,7 @@ services:
     depends_on:
       - "db"
       - "redis"
+      - "elasticsearch"
   sidekiq:
     build: ../
     command: bundle exec sidekiq
@@ -47,7 +50,18 @@ services:
     depends_on:
       - "web"
       - "redis"
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.16.3
+    container_name: backend_challenge_elasticsearch
+    environment:
+      - discovery.type=single-node
+    volumes:
+      - elasticsearch:/usr/share/elasticsearch/data
+    ports:
+      - "9300:9300"
+      - "9200:9200"
 volumes:
   mysql_data:
   bundle:
   redis:
+  elasticsearch:

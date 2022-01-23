@@ -25,9 +25,13 @@ gem 'puma', '~> 3.11'
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false
 gem 'redis', '4.0.1'
-gem 'hiredis'
 gem 'redis-rails'
+gem 'redis-objects'
 gem 'sidekiq'
+gem 'sidekiq-unique-jobs'
+gem 'elasticsearch-model'
+gem 'elasticsearch-rails'
+gem 'rswag'
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
 # gem 'rack-cors'
@@ -51,6 +55,7 @@ group :test do
   gem 'factory_bot_rails', '4.8.2'
   gem 'database_cleaner', '1.6.2'
   gem 'shoulda-matchers', '4.0.0.rc1'
+  gem 'elasticsearch-extensions'
 end
 
 
