@@ -1,0 +1,426 @@
+---
+openapi: 3.0.1
+info:
+  title: API V1
+  version: v1
+definitions:
+  applications:
+    application_object:
+      type: object
+      properties:
+        name:
+          type: string
+        token:
+          type: string
+        chats_count:
+          type: number
+        created_at:
+          type: string
+        updated_at:
+          type: string
+    applications_array:
+      type: object
+      properties:
+        applications:
+          type: array
+          items:
+            "$ref": "#/definitions/applications/application_object"
+  chats:
+    chat_object:
+      type: object
+      properties:
+        name:
+          type: string
+        app_token:
+          type: string
+        chat_number:
+          type: number
+        messages_count:
+          type: number
+        created_at:
+          type: string
+        updated_at:
+          type: string
+    chats_array:
+      type: object
+      properties:
+        chats:
+          type: array
+          items:
+            "$ref": "#/definitions/chats/chat_object"
+    chat_number:
+      type: object
+      properties:
+        chat_number:
+          type: number
+  messages:
+    message_object:
+      type: object
+      properties:
+        body:
+          type: string
+        app_token:
+          type: string
+        chat_number:
+          type: number
+        message_number:
+          type: number
+        created_at:
+          type: string
+        updated_at:
+          type: string
+    messages_array:
+      type: object
+      properties:
+        messages:
+          type: array
+          items:
+            "$ref": "#/definitions/messages/message_object"
+    message_number:
+      type: object
+      properties:
+        message_number:
+          type: number
+paths:
+  "/api/v1/applications":
+    get:
+      summary: get applications
+      tags:
+      - Application
+      responses:
+        '200':
+          description: get applications
+          content:
+            application/json:
+              schema:
+                "$ref": "#/definitions/applications/applications_array"
+    post:
+      summary: creates an application
+      tags:
+      - Application
+      parameters:
+      - name: name
+        in: query
+        description: Application name
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: application created
+          content:
+            application/json:
+              schema:
+                "$ref": "#/definitions/applications/application_object"
+        '422':
+          description: invalid request
+  "/api/v1/applications/{token}":
+    get:
+      summary: get an application
+      tags:
+      - Application
+      parameters:
+      - name: token
+        in: path
+        description: Token
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: get application
+          content:
+            application/json:
+              schema:
+                "$ref": "#/definitions/applications/application_object"
+        '404':
+          description: application not found
+        '422':
+          description: invalid request
+    put:
+      summary: updates an application
+      tags:
+      - Application
+      parameters:
+      - name: token
+        in: path
+        description: Token
+        required: true
+        schema:
+          type: string
+      - name: name
+        in: query
+        description: Application name
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: application updated
+          content:
+            application/json:
+              schema:
+                "$ref": "#/definitions/applications/application_object"
+        '404':
+          description: application not found
+        '422':
+          description: invalid request
+  "/api/v1/applications/{application_token}/chats":
+    get:
+      summary: get chats
+      tags:
+      - Chat
+      parameters:
+      - name: application_token
+        in: path
+        description: Application token
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: get chats
+          content:
+            application/json:
+              schema:
+                "$ref": "#/definitions/chats/chats_array"
+        '404':
+          description: application not found
+    post:
+      summary: creates a chat
+      tags:
+      - Chat
+      parameters:
+      - name: application_token
+        in: path
+        description: Application token
+        required: true
+        schema:
+          type: string
+      - name: name
+        in: query
+        description: Chat name
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: chat created
+          content:
+            application/json:
+              schema:
+                "$ref": "#/definitions/chats/chat_number"
+        '404':
+          description: application not found
+        '422':
+          description: invalid request
+  "/api/v1/applications/{application_token}/chats/{number}":
+    get:
+      summary: get a chat
+      tags:
+      - Chat
+      parameters:
+      - name: application_token
+        in: path
+        description: Application token
+        required: true
+        schema:
+          type: string
+      - name: number
+        in: path
+        description: Chat number
+        required: true
+        schema:
+          type: number
+      responses:
+        '200':
+          description: get chat
+          content:
+            application/json:
+              schema:
+                "$ref": "#/definitions/chats/chat_object"
+        '404':
+          description: chat not found
+    put:
+      summary: updates a chat
+      tags:
+      - Chat
+      parameters:
+      - name: application_token
+        in: path
+        description: Application token
+        required: true
+        schema:
+          type: string
+      - name: number
+        in: path
+        description: Chat number
+        required: true
+        schema:
+          type: number
+      - name: name
+        in: query
+        description: Chat name
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: chat updated
+          content:
+            application/json:
+              schema:
+                "$ref": "#/definitions/chats/chat_object"
+        '404':
+          description: chat not found
+        '422':
+          description: invalid request
+  "/api/v1/applications/{application_token}/chats/{chat_number}/messages":
+    get:
+      summary: get messages
+      tags:
+      - Message
+      parameters:
+      - name: application_token
+        in: path
+        description: Application token
+        required: true
+        schema:
+          type: string
+      - name: chat_number
+        in: path
+        description: Chat number
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: get messages
+          content:
+            application/json:
+              schema:
+                "$ref": "#/definitions/messages/messages_array"
+        '404':
+          description: chat not found
+    post:
+      summary: creates a message
+      tags:
+      - Message
+      parameters:
+      - name: application_token
+        in: path
+        description: Application token
+        required: true
+        schema:
+          type: string
+      - name: chat_number
+        in: path
+        description: Chat number
+        required: true
+        schema:
+          type: string
+      - name: body
+        in: query
+        description: Message body
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: message created
+          content:
+            application/json:
+              schema:
+                "$ref": "#/definitions/messages/message_number"
+        '404':
+          description: chat not found
+        '422':
+          description: invalid request
+  "/api/v1/applications/{application_token}/chats/{chat_number}/messages/{number}":
+    get:
+      summary: get a message
+      tags:
+      - Message
+      parameters:
+      - name: application_token
+        in: path
+        description: Application token
+        required: true
+        schema:
+          type: string
+      - name: chat_number
+        in: path
+        description: Chat number
+        required: true
+        schema:
+          type: number
+      - name: number
+        in: path
+        description: Message number
+        required: true
+        schema:
+          type: number
+      responses:
+        '200':
+          description: get message
+          content:
+            application/json:
+              schema:
+                "$ref": "#/definitions/messages/message_object"
+        '404':
+          description: message not found
+    put:
+      summary: updates a message
+      tags:
+      - Message
+      parameters:
+      - name: application_token
+        in: path
+        description: Application token
+        required: true
+        schema:
+          type: string
+      - name: chat_number
+        in: path
+        description: Chat number
+        required: true
+        schema:
+          type: number
+      - name: number
+        in: path
+        description: Message number
+        required: true
+        schema:
+          type: number
+      - name: body
+        in: query
+        description: Message body
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: chat updated
+          content:
+            application/json:
+              schema:
+                "$ref": "#/definitions/messages/message_object"
+        '404':
+          description: message not found
+        '422':
+          description: invalid request
+  "/api/v1/messages/search?q=":
+    get:
+      summary: search a message
+      tags:
+      - Message
+      parameters:
+      - name: q
+        in: query
+        description: keyword
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: search message
