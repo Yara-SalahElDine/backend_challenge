@@ -55,6 +55,7 @@ services:
     container_name: backend_challenge_elasticsearch
     environment:
       - discovery.type=single-node
+      - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
     volumes:
       - elasticsearch:/usr/share/elasticsearch/data
     ports:
